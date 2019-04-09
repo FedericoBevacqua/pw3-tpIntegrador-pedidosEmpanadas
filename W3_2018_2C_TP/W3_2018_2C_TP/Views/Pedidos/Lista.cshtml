@@ -1,0 +1,73 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_UsuarioLayout.cshtml";
+}
+
+@model List<Pedido>
+<div class="container">
+    <h2>Lista de Pedidos</h2>
+    <div class="table-responsive">
+        <table id="tabla" class="table table-striped">
+            <thead>
+                <tr class="bg-warning">
+                    <th>Fecha Creaci&oacute;n</th>
+                    <th>Nombre Negocio</th>
+                    <th>Estado</th>
+                    <th>Rol</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (Pedido p in Model)
+                {
+                    <tr>
+                        <td>@p.FechaCreacion.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td>@p.NombreNegocio</td>
+                        <td>@p.EstadoPedido.Nombre</td>
+                        <td>
+                            @if (p.IdUsuarioResponsable == SessionManager.UsuarioSession.IdUsuario)
+                            {
+                                @Html.Raw("Responsable")
+                            }
+                            else
+                            {
+                                @Html.Raw("Invitado")
+                            }
+                        </td>
+                        <td>
+                            @if (p.EstadoPedido.Nombre == "Abierto" && p.IdUsuarioResponsable == SessionManager.UsuarioSession.IdUsuario)
+                            {
+                                <a href="/Pedidos/Editar/@p.IdPedido" class="btn btn-info">Editar</a>
+                                <a href="/Pedidos/Copiar/@p.IdPedido" class="btn btn-default">Copiar</a>
+                                <a href="/Pedidos/Elegir/@p.IdPedido" class="btn btn-success">Elegir</a>
+                                <a href="/Pedidos/Eliminar/@p.IdPedido" class="btn btn-danger">Eliminar</a>
+                            }
+                            else
+                            {
+                                <a href="/Pedidos/Detalle/@p.IdPedido" class="btn btn-info">Detalle</a>
+                                <a href="/Pedidos/Copiar/@p.IdPedido" class="btn btn-default">Copiar</a>
+                                <a href="/Pedidos/Elegir/@p.IdPedido" class="btn btn-success">Elegir</a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <p>
+            <a href="/Pedidos/Iniciar/">
+                <button type="button" id="btnNuevoPedido" class="btn btn-success">Nuevo pedido</button>
+            </a>
+        </p>
+    </div>
+    <script type="text/javascript">
+        if ($('#tabla')) {
+            $(document).ready(function () {
+                debugger;
+                $('#tabla').DataTable({
+                    "order": []
+                });
+            });
+        }
+    </script>
+</div>
+
